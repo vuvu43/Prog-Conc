@@ -40,6 +40,9 @@ void* tarefa( void* argumentos){
     pthread_exit((void*) ret);
 }
 
+//para usar fazer:
+//randvet x > ex
+//lab2 n < ex
 int main(int argc, char* argv[]){
     long int dim; //dimensao do vetor de entrada
     long int tamBloco; //tamanho do bloco de cada thread 
