@@ -38,7 +38,7 @@ void *matMult(void *arg){
 //fluxo principal
 int main(int argc, char* argv[]) {
    pthread_t *tid; //identificadores das threads no sistema
-   struct tArgs *args; //identificadores locais das threads e dimensao
+   struct tArgs *args; //vetor de argumentos 
    double inicio, fim, delta;// vars para calcular tempo de execução
    
    GET_TIME(inicio);
