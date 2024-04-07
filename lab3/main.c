@@ -15,7 +15,7 @@ int dim; //tamanho da matriz
 int nthreads; //numero de threads
 
 struct tArgs{
-   int id; //identificador do elemento que a thread ira processar
+   int id; //identificador da thread
    int linha_ini; //linha para começar processamento
    int linha_final; //linha para terminar processamento
 };
