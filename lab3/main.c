@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
    delta = fim - inicio;
    printf("Tempo linha_inicializacao:%lf\n", delta);
 
-   //multiplicacao da matriz pelo vetor
+   //multiplicacao de matA com matB
    GET_TIME(inicio);
 
    //alocacao das estruturas para threads
