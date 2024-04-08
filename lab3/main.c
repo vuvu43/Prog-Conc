@@ -1,17 +1,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include "leMatrizBinario.h"
 #include "timer.h"
-#include "imprimeMat.h"
+#include "matUtil.h"
 
-//caso queira checar se leu as matrizes A e B
-//#define TEXTO 
+//caso queira checar as matrizes A B e C
+//#define TEXTO
+//caso queria testar o codigo (imprime a matriz de TESTE)
+//#define TESTE
 
-float *matA; //matriz A
-float *matB; //matriz B
+struct spec *matA; //matriz A
+struct spec *matB; //matriz B
 float *matC; //matriz C
-int dim; //tamanho da matriz
 int nthreads; //numero de threads
 
 struct tArgs{
@@ -25,11 +25,24 @@ void *matMult(void *arg){
    struct tArgs* args = (struct tArgs*) arg;
 
    for(int i = args->linha_ini; i < args->linha_final; i++){
-      for(int j = 0; j < dim; j++){
-         matC[i * dim + j] = 0;
+      for(int j = 0; j < matB->col; j++){
+         matC[i * matB->col + j] = 0.0;
 
-         for(int k = 0; k < dim; k++){
-               matC[i * dim + j] += matA[i * dim + k] * matB[k * dim + j];
+         for(int k = 0; k < matA->col; k++){
+               matC[i * matB->col + j] += matA->mat[i * matA->col + k] * matB->mat[k * matB->col + j];
+         }
+      }
+   }
+}
+
+//função de teste para checar se a multiplicação está certa
+void matMultSeq(float* teste){
+   for (int i = 0; i < matA->lin; i++) {
+      for (int j = 0; j < matB->col; j++) {
+         teste[i * matB->col + j] = 0.0;
+
+         for (int k=0; k < matA->col; k++) {
+            teste[i * matB->col + j] += matA->mat[i * matA->col + k] * matB->mat[k * matB->col + j];
          }
       }
    }
@@ -45,28 +58,27 @@ int main(int argc, char* argv[]) {
    //leitura e avaliacao dos parametros de entrada
    if(argc<5) {
       //exemplo: ./main matA matB 4 2
-      printf("Digite: %s <arquivoA(binario)> <arquivoB(binario)> <dimensao da matriz> <numero de threads>\n", argv[0]);
+      printf("Digite: %s <arquivoA(binario)> <arquivoB(binario)> <numero de threads> <nome arquivo saida>\n", argv[0]);
       return 1;
    }
 
    matA = leMatriz(argv[1]);
    matB = leMatriz(argv[2]);
-   dim = atoi(argv[3]);
-   nthreads = atoi(argv[4]);
-   if (nthreads > dim) nthreads=dim;
+   nthreads = atoi(argv[3]);
+   if (nthreads > matA->lin) nthreads=matA->lin;
 
 #ifdef TEXTO
    //print matA
-   printf("Matriz A:\n");
-   imprimeMat(matA, dim);
+   printf("Matriz A: %dx%d\n", matA->lin, matA->col);
+   imprimeMat(matA->mat, matA->lin, matA->col);
 
    //print matB
-   printf("Matriz B:\n");
-   imprimeMat(matB, dim);
+   printf("Matriz B: %dx%d\n", matB->lin, matB->col);
+   imprimeMat(matB->mat, matB->lin, matB->col);
 #endif
 
    //alocacao de memoria para as estruturas de dados
-   matC = (float *) malloc(sizeof(float) * dim * dim);
+   matC = (float *) malloc(sizeof(float) * matA->lin * matB->col);
    if (matC == NULL) {printf("ERRO--malloc\n"); return 2;}
 
    GET_TIME(fim);
@@ -86,10 +98,8 @@ int main(int argc, char* argv[]) {
    //criacao das threads
    for(int i=0; i<nthreads; i++) {
       (args+i)->id = i;
-      (args+i)->linha_ini = i * (dim/nthreads); //linha inicial 
-      (args+i)->linha_final = (args+i)->linha_ini + (dim/nthreads); //linha final
-      //se quiser ver quais linhas cada thread vai executar descomente abaixo
-      //printf("Thread %d: [%d, %d]\n", (args+i)->id, (args+i)->linha_ini, (args+i)->linha_final);
+      (args+i)->linha_ini = i * (matA->lin/nthreads); //linha inicial 
+      (args+i)->linha_final = (args+i)->linha_ini + (matA->col/nthreads); //linha final
       
       if(pthread_create(tid+i, NULL, matMult, (void*) (args+i))){
          puts("ERRO--pthread_create"); return 3;
@@ -97,13 +107,13 @@ int main(int argc, char* argv[]) {
    } 
 
    //calcula o restante das linhas de forma sequencial
-   if (dim%nthreads){
+   if (matA->lin%nthreads){
       struct tArgs *param = (struct tArgs*) malloc(sizeof(struct tArgs));
       if (param == NULL) {printf("ERRO -- malloc"); return 2;}
 
       param->id = nthreads+1;
-      param->linha_ini = dim - (dim/nthreads);
-      param->linha_final = dim;
+      param->linha_ini = matA->lin - (matA->lin/nthreads);
+      param->linha_final = matA->lin;
 
       matMult((void *) param);
    }
@@ -115,11 +125,20 @@ int main(int argc, char* argv[]) {
 
    GET_TIME(fim)   
    delta = fim - inicio;
-   printf("\nTempo multiplicacao (dimensao %d) (nthreads %d): %lf\n", dim, nthreads, delta);
+   printf("\nTempo multiplicacao (dimensao %dx%d) (nthreads %d): %lf\n", matA->lin, matB->col, nthreads, delta);
+   escreveMatrizBinario(argv[4], matC, matA->lin, matB->col);
 
 #ifdef TEXTO
-   printf("\nMatriz C\n");
-   imprimeMat(matC, dim);
+   printf("\nMatriz C: %dx%d\n", matA->lin, matB->col);
+   imprimeMat(matC, matA->lin, matB->col);
+#endif
+
+#ifdef TESTE
+   float *teste = malloc(sizeof(float) * matA->lin * matB->col);
+   matMultSeq(teste);
+   printf("Matriz TESTE: %dx%d\n", matA->lin, matB->col);
+   imprimeMat(teste, matA->lin, matB->col);
+   free(teste);
 #endif
 
    //liberacao da memoria

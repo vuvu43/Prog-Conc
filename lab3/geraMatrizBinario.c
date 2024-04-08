@@ -9,7 +9,7 @@
 #include<time.h>
 
 //descomentar o define abaixo caso deseje imprimir uma versao truncada da matriz gerada no formato texto
-//#define TEXTO 
+#define TEXTO 
 
 
 //./geraMatrizBinario <linha> <coluna> <arquivo(binario)>
@@ -17,7 +17,7 @@ int main(int argc, char*argv[]) {
    float *matriz; //matriz que será gerada
    int linhas, colunas; //dimensoes da matriz
    long long int tam; //qtde de elementos na matriz
-   FILE * descritorArquivo; //descritor do arquivo de saida
+   FILE *descritorArquivo; //descritor do arquivo de saida
    size_t ret; //retorno da funcao de escrita no arquivo de saida
    
    //recebe os argumentos de entrada
@@ -47,7 +47,7 @@ int main(int argc, char*argv[]) {
    #ifdef TEXTO
    for(int i=0; i<linhas; i++) {
       for(int j=0; j<colunas; j++)
-        fprintf(stdout, "%.6f ", matriz[i*colunas+j]);
+        fprintf(stdout, "%.2f ", matriz[i*colunas+j]);
       fprintf(stdout, "\n");
    }
    #endif
