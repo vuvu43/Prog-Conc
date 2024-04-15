@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
    GET_TIME(inicio);
    //leitura e avaliacao dos parametros de entrada
    if(argc<5) {
-      //exemplo: ./main matA matB 4 2
+      //exemplo: ./main matA matB 4 matc
       printf("Digite: %s <arquivoA(binario)> <arquivoB(binario)> <numero de threads> <nome arquivo saida>\n", argv[0]);
       return 1;
    }
