@@ -1,4 +1,4 @@
-# ADENDO
+# Progrmação Concorrente
 
 
-Na hora de upar o pdf para o lab3 acabei selecionando a versão desatualizada, o correto está dentro da pasta lab3 aqui do github
+Repositório para códigos feitos na disciplina de Programação Concorrente - 2024.1
