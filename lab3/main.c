@@ -33,6 +33,7 @@ void *matMult(void *arg){
          }
       }
    }
+   //pthread_exit(NULL); por algum motivo, o programa para com essa linha
 }
 
 //função de teste para checar se a multiplicação está certa
