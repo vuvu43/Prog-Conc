@@ -55,7 +55,7 @@ int main (int argc, char* argv[]){
 
 
     if (argc != 3){
-        printf("Utilização: main <iter> <#threads> \n"); exit(-1);
+        printf("Utilização: m%s <iter> <#threads> \n", argv[0]); exit(-1);
     }
 
     //init vars
