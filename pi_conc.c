@@ -86,7 +86,7 @@ int main (int argc, char* argv[]){
 
     //printa pi calculado de forma concorrente e o erro
     printf("Pi concorrente: %.50f\n", pi);
-    printf("Diferenca: %.50f", seq - pi);
+    printf("Diferenca: %e", seq - pi);
 
     pthread_mutex_destroy(&mutex);
     return 0;
