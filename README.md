@@ -14,6 +14,7 @@ nums 10000
 main 100 50 output.bin
 ```
 <br>
+
 cheat code no linux:
 ```console
 git clone https://github.com/vuvu43/Prog-Conc.git
