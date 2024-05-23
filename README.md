@@ -4,6 +4,17 @@ Repositório para códigos feitos na disciplina de Programação Concorrente - 2
 
 
 # lab6
+
+Modo de uso da main:
+```
+main <num_threads> <buffer_size> <arquivo>
+```
+
+Modo de uso nums:
+```
+nums <num_mt_mt_grande>
+```
+
 cheat code no windows:
 ```console
 git clone https://github.com/vuvu43/Prog-Conc.git
