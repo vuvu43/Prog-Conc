@@ -5,7 +5,7 @@ Repositório para códigos feitos na disciplina de Programação Concorrente - 2
 # Monte-Carlo
 Aplicação que calcula uma integral definida pelo método de Monte Carlo. Para usar basta compilar a main e passar os argumentos pela linha de comando lim_inf, lim_sup, iter e qnt_threads. Está tudo melhor explicado dentro do código.
 
-chat code:
+cheat code:
 ```
 git clone https://github.com/vuvu43/Prog-Conc.git
 cd Prog-Conc/Monte-Carlo
