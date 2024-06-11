@@ -85,7 +85,7 @@ int main(int argc, char* argv[]){
 
         // passa a função para as threads
         if(pthread_create(tid+i, NULL, monte_carlo_int_thread, (void*)(args+i))){
-            fprintf(stderr, "Erro ao passar função para thread");
+            fprintf(stderr, "Erro ao passar funcao para thread");
             exit(-1);
         }
     }
@@ -95,7 +95,7 @@ int main(int argc, char* argv[]){
         double* result;
         if (pthread_join(tid[i], (void**)&result) != 0) {
             fprintf(stderr, "Erro ao juntar thread.\n");
-            return 1;
+            exit(-1);
         }
 
         integral_a_b += *result;
