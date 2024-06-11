@@ -1,4 +1,4 @@
-/*
+/* Autores: Arthur Pinheiro, Pedro Arthur Santos Gama
 * Antes de rodar o programa:
 * Você (usuário) deve escolher a função a ser integrada
 * Então definir o intervalo de integração
