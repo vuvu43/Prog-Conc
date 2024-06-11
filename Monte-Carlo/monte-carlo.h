@@ -27,9 +27,9 @@ double find_max_value(double a, double b, double (*func)(double), int num_sample
     é útil para fazer a integração de monte-carlo
 
     Entrada:
-        - double a: limite inferior da intervalo
+        - double a: limite inferior do intervalo
         - double b: limite superior do intervalo
-        - double (*func)(double): função qualquer tal que f: R --> R
+        - double (*func)(double): função qualquer tal que f: R --> R+
         - int num_samples: quantidade de pontos que serão testados
 
     Saída:
@@ -59,7 +59,7 @@ double monte_carlo_int(double a, double b, long int iter, double (*func)(double)
         - double b: limite superior integrado
         - double c: maior valor de func dentro do intervalo
         - long int iter: quantidade de simulações
-        - double (*func)(double): função a ser integrada tal que f: R --> R
+        - double (*func)(double): função a ser integrada tal que f: R --> R+
     
     Saída:
         - area: area calculada dentro do intervalo
@@ -89,7 +89,8 @@ double monte_carlo_int(double a, double b, long int iter, double (*func)(double)
     }
 
     free(ponto);
-    double area =  area_retangulo * dentro / iter;
+    //area calculada com base na proporção de pontos * a área total
+    double area =  area_retangulo * dentro / iter; 
 
     return area;
 }
