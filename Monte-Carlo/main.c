@@ -1,4 +1,4 @@
-/* Autores: Arthur Pinheiro, Pedro Arthur Santos Gama
+/* Autor: Arthur Pinheiro
 * Antes de rodar o programa:
 * Você (usuário) deve escolher a função a ser integrada
 * Então definir o intervalo de integração
@@ -9,7 +9,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
+#include <math.h> // possui a função sin(x)
 #include <pthread.h>
 #include "monte-carlo.h"
 #include "timer.h"
@@ -23,14 +23,13 @@ typedef struct{
 
 // função de exemplo
 double f(double x){
-    return sqrt(1 - x*x);
+    return x*x + 5;
 }
 
 void* monte_carlo_int_thread(void* targs){
     tArgs* args = (tArgs*) targs;
 
-    double area =  monte_carlo_int(
-                                    args->lim_inf, 
+    double area =  monte_carlo_int(args->lim_inf, 
                                     args->lim_sup, 
                                     args->iter, 
                                     args->func
@@ -63,6 +62,7 @@ int main(int argc, char* argv[]){
     pthread_t* tid = malloc(sizeof(pthread_t) * M); // identificadores das threads no sistema
     tArgs* args = malloc(sizeof(tArgs) * M); // vetor de argumentos 
     double inicio, fim, delta;// vars para calcular tempo de execução
+
     if (tid == NULL){
         fprintf(stderr, "Erro ao alocar threads.");
         exit(-1);
@@ -73,14 +73,17 @@ int main(int argc, char* argv[]){
         exit(-1);
     }
 
-    double tam_bloco = (b - a) / M;
-    long int iter_thread = iter_max / M;
+    double tam_bloco = (b - a) / M; 
+    long int iter_thread = iter_max / M; //iterações que cada thread irá fazer
+
+    // Computa tempo 
+    GET_TIME(inicio)
 
     for (int i=0; i<M; i++){
         // inicializa argumentos para threads
         (args+i)->lim_inf = a + i * tam_bloco;
-        (args+i)->lim_sup = (args+i)->lim_inf + tam_bloco;
-        (args+i)->iter = iter_thread;
+        (args+i)->lim_sup = (args+i)->lim_inf + tam_bloco; 
+        (args+i)->iter = iter_thread; //divisão de carga
         (args+i)->func = f;
 
         // passa a função para as threads
@@ -101,6 +104,11 @@ int main(int argc, char* argv[]){
         integral_a_b += *result;
         free(result);  // libera a memória alocada para o resultado
     }
+
+    // Computa tempo
+    GET_TIME(fim);
+    delta = fim - inicio;
+    printf("\nTempo de execucao %.2f\n", delta);
 
     printf("Area entre [%.2f, %.2f]: %f\n", a, b, integral_a_b);
 
