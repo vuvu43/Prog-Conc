@@ -45,6 +45,9 @@ void* monte_carlo_int_thread(void* targs){
     pthread_exit((void*)ret);
 }
 
+
+
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int main(int argc, char* argv[]){
     if (argc != 5){
         printf("Modo de uso: %s <a> <b> <iter> <qnt_thread>\n", argv[0]); 
@@ -58,7 +61,10 @@ int main(int argc, char* argv[]){
     double b = atof(argv[2]);
     long int iter_max = atoi(argv[3]);
     int M = atoi(argv[4]);
-    
+
+    //init mutex
+    pthread_mutex_init(&mutex, NULL);
+
     pthread_t* tid = malloc(sizeof(pthread_t) * M); // identificadores das threads no sistema
     tArgs* args = malloc(sizeof(tArgs) * M); // vetor de argumentos 
     double inicio, fim, delta;// vars para calcular tempo de execução
@@ -112,8 +118,10 @@ int main(int argc, char* argv[]){
 
     printf("Area entre [%.2f, %.2f]: %f\n", a, b, integral_a_b);
 
+    // free args
     free(tid);
     free(args);
+    pthread_mutex_destroy(&mutex);
 
     return 0;
 }

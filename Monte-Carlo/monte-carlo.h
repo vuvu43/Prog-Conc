@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+extern pthread_mutex_t mutex; // referencia o mutex criado na main
 
 // Função para gerar um número aleatório entre min e max
 double random_double(double min, double max) {
@@ -14,13 +15,15 @@ double* random_point(double a, double b, double c) {
         exit(-1);
     }
 
+    // seção crítica
+    pthread_mutex_lock(&mutex);
     ponto[0] = random_double(a, b);
     ponto[1] = random_double(0, c);
+    pthread_mutex_unlock(&mutex);
 
     return ponto;
 }
 
-// Função para encontrar o maior valor que uma função assume no intervalo [a, b]
 double find_max_value(double a, double b, double (*func)(double), int num_samples) {
     /*
     Função para encontrar o maior valor de uma outra função dentro do intervalo [a, b]
